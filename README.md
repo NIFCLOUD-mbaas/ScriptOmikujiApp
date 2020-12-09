@@ -134,7 +134,7 @@ mobile backend 管理画面にログインし、アプリを作成します。
 * 「ファイルの状態」は「実行可能」を選択する
 * 「アップロードする」をクリックする
 
-<img src="images/scriptOmikujiApp_001.png" alt="scriptOmikujiApp_001" size="400px">
+<img src="images/scriptOmikujiApp_001.PNG" alt="scriptOmikujiApp_001" size="400px">
 
 動作テストをします。
 * 一覧から「omikujiScript.js」を選びクリックすると右側に「詳細情報」が表示される
@@ -142,7 +142,7 @@ mobile backend 管理画面にログインし、アプリを作成します。
 * 「実行」をクリックする
 * 正しく作業できていれば「結果」におみくじの結果がローマ字で出力される
 
-<img src="images/scriptOmikujiApp_002.png" alt="scriptOmikujiApp_002" size="450px">
+<img src="images/scriptOmikujiApp_002.PNG" alt="scriptOmikujiApp_002" size="450px">
 
 * 次の結果が出る場合は、ファイルのデプロイが完了していないため、少し時間をおいてからリトライしてください
    * `{"error":"Script is not yet deployed.","status":409,"code":"E409002"}`
@@ -160,4 +160,4 @@ Monacaにログインしてダッシュボードを開き、「新しいプロ�
 * 以下URLからおみくじ本体およびおみくじの結果（７種）の合わせて８つの画像を取得する
   * https://www.irasutoya.com/search?q=おみくじ
 
-<img src="images/scriptOmikujiApp_003.png" alt="scriptOmikujiApp_003" size="650px">
+<img src="images/scriptOmikujiApp_003.PNG" alt="scriptOmikujiApp_003" size="650px">
