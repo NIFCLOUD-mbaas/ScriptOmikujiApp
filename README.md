@@ -161,3 +161,163 @@ Monacaにログインしてダッシュボードを開き、「新しいプロ�
   * https://www.irasutoya.com/search?q=おみくじ
 
 <img src="images/scriptOmikujiApp_003.PNG" alt="scriptOmikujiApp_003" size="650px">
+
+* 「index.html」と同じ階層に「images」フォルダを作成する
+* 作成した「images」フォルダに取得した８つの画像をインポートする
+   * 「いらすとや」の画像を使わない場合も、ファイル名は同じものを使ってください。（※１）
+   
+<img src="images/scriptOmikujiApp_007.PNG" alt="scriptOmikujiApp_007" size="250px">
+
+
+画像の準備が終わったら、コーディングを行っていきます。まず、「CSS」フォルダから「style.css」を開いて、次のように書き換えます。
+
+```css
+.omikuji {
+    width: 100%;
+}
+.omikuji-body{
+    width: 250px;
+    height: 250px;
+    margin: 20px auto;
+    
+    background-image: url(../images/syougatsu2_omijikuji2.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+}
+
+.omikuji-result{
+    width: 250px;
+    height: 250px;
+    margin: 20px auto;
+    
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+}
+
+/* おみくじの回転 */
+@keyframes omikuji-go {
+    0% {
+        transform: rotate(0);
+    }
+    100% {
+        transform: rotate(180deg);
+    }
+}
+
+@keyframes omikuji-back {
+    0% {
+        transform:rotate(180deg);
+    }
+    100% {
+        transform:rotate(360deg);
+    }
+}
+```
+* おみくじ本体画像の表示や、そのアニメーションなどの設定をしています
+
+編集が終わったら、プロジェクトを保存します。次に「index.html」を開き、bodyタグを次のように書き変えます。
+
+```html
+<body>
+    <div class="omikuji">
+        <div class="omikuji-pull">
+            <input type="button" onclick="pullOmikuji()" value="おみくじを引く">
+        </div>
+        <div class="omikuji-body"></div>
+        <div class="omikuji-result"></div>
+    </div>
+</body>
+```
+* 「おみくじを引く」ボタンの設置と、おみくじの結果として画像を表示するためのタグを用意しています
+
+プロジェクトを保存すると、プレビュー画面には次のように表示されることが確認できます。
+
+<img src="images/scriptOmikujiApp_004.PNG" alt="scriptOmikujiApp_004" size="250px">
+
+最後に同じ「index.html」のscriptタグを次のように書き変えます。
+
+```html
+<script>        
+    var applicationKey = "YOUR_APPLICATIONKEY";
+    var clientKey = "YOUR_CLIENTKEY";
+    var ncmb = new NCMB(applicationKey, clientKey);
+
+    function pullOmikuji() {
+        /* スクリプト実行 */
+        ncmb.Script
+            .exec("GET", "omikujiScript.js")
+            .then(function(res){
+                // スクリプト実行成功時の処理
+                var result = res.body;
+                getResult(result);
+            })
+            .catch(function(err){
+                // スクリプト実行失敗時の処理
+                document.querySelector(".omikuji-result").innerText = err;
+                console.log(JSON.stringify(err));
+            });
+    }
+
+    function getResult(result) {
+        // おみくじを回す
+        document.querySelector(".omikuji-body").style.animation = "2s omikuji-go ease-out forwards";
+        // 2秒後に実行する
+        setTimeout(function() {
+            // 結果を表示する
+            document.querySelector(".omikuji-result").style.backgroundImage = "url(images/omikuji_" + result + ".png)";
+            // おみくじを戻す
+            document.querySelector(".omikuji-body").style.animation = "2s omikuji-back ease-in forwards";
+        }, 2000);
+    }
+</script>
+```
+* L2-3の「`YOUR_APPLICATIONKEY`」と「`YOUR_CLIENTKEY`」には mobile backend でアプリ作成時に払い出されたAPIキーを設定してください
+  * （参考） https://mbaas.nifcloud.com/doc/current/introduction/div_quickstart_javascript_monaca.html#アプリの新規作成
+* L2-4: APIキーの設定を初期化
+* L6-20: 「おみくじを引く」ボタンが押されたら呼び出されるメソッド内でスクリプト「omikujiScript.js」の実行
+* L13: 取得結果（おみくじの結果（ローマ字））を引き数に設定して画面表示処理を行うメソッドの呼び出し
+* L22-32: 画面表示処理として、おみくじを回すアニメーションを実行し、アニメーションが終わるのと同時に結果を画面に表示しておみくじを元に戻す処理を実施
+
+### 3.動作確認
+
+編集が終わったら、プロジェクトを保存し、プレビュー画面を確認します。
+
+* 「おみくじを引く」ボタンを押します
+• おみくじの画像が回転して結果が表示されます
+• 結果が表示されるとおみくじの画像が回転して元に戻ります
+
+<img src="images/scriptOmikujiApp_005.PNG" alt="scriptOmikujiApp_005" size="250px">
+
+## おわりに
+
+おみくじの確率設定は今回以下ブログ記事を参考に実際の神社と同じ（と思われる）設定にしています。
+* （参考）よく分かる！神社おみくじの正しい順番！大吉・凶が出る確率は？ http://choi-nico.com/omikuji_junjo-1700 
+
+ですが、もちろん確率は自由に設定変更が可能です。変更する場合は、アプリ側は変更不要で、サーバー側のスクリプトファイルのL3-4「配列の値」を変更します。例えば、「大凶」が出なく（0% または削除）したり、「大大吉」が1%だけ出るようにしたりなど、好きなようにカスタマイズができます
+* L4で結果を追加または削除したら、L3の確率もそれに合わせて変更する必要があります
+* L3の配列の値が合計で100になるように設定してください
+
+L3-4の設定に誤りがあるとエラーが出るように作成していますので、いろいろ試してみてください！
+なお、変更したスクリプトファイルを再度アップロード（デプロイ）する方法は以下を参考にしてください。
+
+### スクリプトファイルの更新方法
+* 管理画面を開いて「スクリプト」をクリックする
+* 更新するスクリプトファイルを「一覧」から選びクリックします
+* 右側に詳細画面が表示されるので、その中にある「変更」ボタンをクリックします
+* 「ファイル本体の変更」で「変更する」をクリックします
+* 「ファイルを選択」をクリックして更新したファイルを選択します
+
+<img src="images/scriptOmikujiApp_006.PNG" alt="scriptOmikujiApp_006" size="450px">
+
+* 「変更する」をクリックします
+
+---
+
+（※１）ファイル名を指定してコーディングしてあるので、ファイル名を変更したい場合は以下箇所の修正も合わせて必要です。
+* CSS/style.css L9:
+   * `background-image: url(../images/syougatsu2_omijikuji2.png);`
+* index.html＞script L28: 
+   * `document.querySelector(".omikuji-result").style.backgroundImage = "url(images/omikuji_" + result + ".png)";`
+
