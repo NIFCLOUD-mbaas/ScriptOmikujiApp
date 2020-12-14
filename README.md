@@ -1,6 +1,8 @@
 # ScriptOmikujiApp
 【ニフクラ mobile backend スクリプト機能】おみくじアプリを作ってみよう
 
+作成日：2020/12/14
+
 ## 目次
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -79,6 +81,8 @@ mobile backend のスクリプト機能を使ってみたいけどどこから�
 1. スクリプト作成と動作確認
 2. アプリ（HTML/CSS/JS）の実装
 3. 動作確認
+
+※本チュートリアルの手順通り実装しても正しく動作しない場合、「Issues」＞「New issue」より issue を作成（タイトル及び概要の入力）の上、ご報告ください。順次改修いたします。
 
 ## 作業手順
 ### 1.スクリプト作成と動作確認
